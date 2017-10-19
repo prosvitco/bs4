@@ -16,7 +16,6 @@ $sage_includes = [
   'lib/titles.php',    // Page titles
   'lib/wrapper.php',   // Theme wrapper class
   'lib/customizer.php', // Theme customizer
-  'lib/prosvit/optimize.php' // WP optimization
 ];
 
 foreach ($sage_includes as $file) {
@@ -37,14 +36,14 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 // Background Settings
 $backgroundSettings = new FieldsBuilder('background');
 $backgroundSettings
-    ->addRadio('background', ['type' => 'select', 'label' => 'Background', 'wrapper' => ['width' => 25, 'class' => 'column-xs-12' ]])
+    ->addRadio('background', ['type' => 'select', 'label' => 'Background', 'wrapper' => ['width' => 20, 'class' => 'column-xs-12' ]])
         ->addChoice('none')
         ->addChoice('color')
         ->addChoice('image')
         ->setDefaultValue('none')
     ->addImage('background_image', ['preview_size' => 'small', 'wrapper' => ['width' => 15, 'class' => 'column-xs-12' ]])
         ->conditional('background', '==', 'image')
-    ->addColorPicker('background_color', ['default_value' => '#ffffff', 'wrapper' => ['width' => 25, 'class' => 'column-xs-12' ]])
+    ->addColorPicker('background_color', ['default_value' => '#ffffff', 'wrapper' => ['width' => 20, 'class' => 'column-xs-12' ]])
         ->conditional('background', '==', 'color');
 
 
@@ -52,23 +51,70 @@ $backgroundSettings
 // Sections Settings
 $sectionsSettings = new FieldsBuilder('sections');
 $sectionsSettings
-    ->addText('id', ['label' => 'ID', 'wrapper' => ['width' => 25, 'class' => 'column-xs-12' ] ])
-    ->addText('class', ['label' => 'Class', 'wrapper' => ['width' => 25, 'class' => 'column-xs-12' ]])
+    ->addText('id', ['label' => 'ID', 'wrapper' => ['width' => 20, 'class' => 'column-xs-12' ] ])
+    ->addText('class', ['label' => 'Class', 'wrapper' => ['width' => 20, 'class' => 'column-xs-12' ]])
+    ->addRadio('full_width', ['label' => 'Full Width?', 'wrapper' => ['width' => 20, 'class' => 'column-xs-12' ]])
+    	->addChoices('No', 'Yes')
+    	->setDefaultValue('No')
     ->addFields($backgroundSettings);
 
 
 // Column Section
-$columns = new FieldsBuilder('columns', ['label' => 'Column Section']);
+$columns = new FieldsBuilder('section', ['label' => 'Column Section']);
 $columns
     ->addFields($sectionsSettings)
-    ->addRepeater('columns', ['layout' => 'block', 'jpn-tabs' => 'vertical'])
+    ->addRepeater('rows', ['layout' => 'block', 'jpn-tabs' => 'vertical'])
+    ->addText('add_row_class', ['label' => 'Aditional Row Class', 'wrapper' => ['width' => 25, 'class' => 'column-xs-12' ] ])
+    ->addRadio('add_wrapper', ['label' => 'Add Wrapper?', 'wrapper' => ['width' => 25, 'class' => 'column-xs-12' ]])
+    ->addChoices('No', 'Yes')
+    ->setDefaultValue('No')
+    ->addText('add_wrapper_class', ['label' => 'Add Wrapper Class', 'wrapper' => ['width' => 25, 'class' => 'column-xs-12' ] ])
+    ->conditional('add_wrapper', '==', 'Yes')
         ->addFlexibleContent('content')
             ->addLayout('title')
-                ->addText('title')
+            	->addRadio('title_tag', ['type' => 'select', 'label' => 'Title Tag', 'wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+            	->addChoices('h1', 'h2', 'h3', 'h4', 'h5', 'h6')
+            	->addText('title_class', ['label' => 'Title Class', 'wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+                ->addText('title', ['label' => 'Title text', 'wrapper' => ['width' => 100, 'class' => 'column-xs-12' ]])
             ->addLayout('text')
                 ->addWysiwyg('content')
             ->addLayout('image')
-                ->addImage('image', ['preview_size' => 'medium']);
+            	->addText('image_class')
+                ->addImage('image', ['preview_size' => 'medium'])
+            ->addLayout('video')
+            	->addOembed('video')
+			->addLayout('blog')
+				->addText('class', ['label' => 'Block Class', 'wrapper' => ['width' => 100, 'class' => 'column-xs-12' ]])
+				->addRadio('title_tag', ['type' => 'select', 'label' => 'Title Tag', 'wrapper' => ['width' => 33.3, 'class' => 'column-xs-4' ]])
+            	->addChoices('h1', 'h2', 'h3', 'h4', 'h5', 'h6')
+            	->addText('title_class', ['label' => 'Title Class', 'wrapper' => ['width' => 33.3, 'class' => 'column-xs-4' ]])
+                ->addText('title', ['label' => 'Title text', 'wrapper' => ['width' => 33.3, 'class' => 'column-xs-4' ]])
+				->addRepeater('posts')
+					->addPostObject('post')
+			->addLayout('hero')
+				->addText('title', ['wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+				->addText('subtitle', ['wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+				->addText('class', ['wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+				->addFields($backgroundSettings, ['wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+			->addLayout('slider')
+			->addText('ID', ['required' => 1, 'label' => 'Slider Indificator', 'wrapper' => ['width' => 100, 'class' => 'column-xs-12' ]])
+			->addRepeater('slides', ['layout' => 'block'])
+        		->addText('class', ['label' => 'Slide Class', 'wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+        		->addImage('image', ['preview_size' => 'medium', 'label' => 'Slide Image', 'wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+            	->addWysiwyg('content', ['label' => 'Slide Content', 'wrapper' => ['width' => 100, 'class' => 'column-xs-12' ]])
+        	->addLayout('tabs')
+        	->addRepeater('tabs', ['layout' => 'block'])
+        		->addText('title', ['label' => 'Title', 'wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+        		->addText('class', ['label' => 'Tab Aditional Class', 'wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+        		->addWysiwyg('content', ['label' => 'Content', 'wrapper' => ['width' => 100, 'class' => 'column-xs-12' ]])
+        	->addLayout('reviews_by_post', ['layout' => 'block'])
+				->addRadio('title_tag', ['type' => 'select', 'label' => 'Title Tag', 'wrapper' => ['width' => 33.3, 'class' => 'column-xs-4' ]])
+            	->addChoices('h1', 'h2', 'h3', 'h4', 'h5', 'h6')
+            	->addText('title_class', ['label' => 'Title Class', 'wrapper' => ['width' => 33.3, 'class' => 'column-xs-4' ]])
+                ->addText('title', ['label' => 'Title text', 'wrapper' => ['width' => 33.3, 'class' => 'column-xs-4' ]])
+        		->addText('block_class', ['wrapper' => ['width' => 100, 'class' => 'column-xs-12' ]])
+        		->addText('review_count', ['label' => 'Number of post','wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
+				->addTaxonomy('review_category', ['wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]]);
 
 
 $content = new FieldsBuilder('page_content', ['style' => 'seamless']);
