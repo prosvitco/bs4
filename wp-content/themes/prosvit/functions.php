@@ -79,6 +79,7 @@ $columns
             ->addLayout('text')
                 ->addWysiwyg('content')
             ->addLayout('image')
+<<<<<<< HEAD
             	->addText('image_class')
                 ->addImage('image', ['preview_size' => 'medium'])
             ->addLayout('video')
@@ -115,6 +116,43 @@ $columns
         		->addText('block_class', ['wrapper' => ['width' => 100, 'class' => 'column-xs-12' ]])
         		->addText('review_count', ['label' => 'Number of post','wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]])
 				->addTaxonomy('review_category', ['wrapper' => ['width' => 50, 'class' => 'column-xs-6' ]]);
+=======
+                ->addImage('image', ['preview_size' => 'medium'])
+            ->addLayout('Video')
+            	->addOembed('video')
+			->addLayout('blog')
+				->addText('title')
+				->addText('class')
+				->addPostObject('post')
+			->addLayout('hero')
+				->addText('title')
+				->addText('subtitle')
+				->addText('class')
+				->addFields($backgroundSettings)
+			->addLayout('slider')
+			->addRepeater('slides')
+        		->addText('title')
+        		->addText('class')
+        		->addWysiwyg('content')
+        		->addImage('image', ['preview_size' => 'medium'])
+        	->addLayout('tabs')
+        	->addRepeater('tab')
+        		->addText('title')
+        		->addText('subtitle')
+        		->addText('class')
+        		->addImage('image', ['preview_size' => 'medium'])
+        		->addWysiwyg('content')
+			->addLayout('reviews')
+			->addRepeater('review')
+        		->addText('title')
+        		->addText('subtitle')
+        		->addImage('image', ['preview_size' => 'medium'])
+        		->addWysiwyg('content')
+        	->addLayout('reviews_by_post')
+			->addRepeater('review_by_post')
+        		->addText('class')
+				->addTaxonomy('review_cat');
+>>>>>>> 22b1957afe7d8ad6715953deffe019e501a603ed
 
 
 $content = new FieldsBuilder('page_content', ['style' => 'seamless']);
